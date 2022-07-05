@@ -12,8 +12,8 @@ import plotly.express as px
 
 HTML_BANNER = """
     <div style="background-color:#464e5f;padding:10px;border-radius:10px">
-    <h1 style="color:white;text-align:center;">ToDo App (CRUD)</h1>
-    <p style="color:white;text-align:center;">Built with Streamlit</p>
+    <h1 style="color:white;text-align:center;">ToDo App</h1>
+    <p style="color:white;text-align:center;">Mahak Gupta</p>
     </div>
     """
 
@@ -22,7 +22,7 @@ def main():
 	stc.html(HTML_BANNER)
 
 
-	menu = ["Create","Read","Update","Delete","About"]
+	menu = ["Create","Read","Update","Delete"]
 	choice = st.sidebar.selectbox("Menu",menu)
 	create_table()
 
@@ -43,16 +43,13 @@ def main():
 
 
 	elif choice == "Read":
-		# st.subheader("View Items")
 		with st.expander("View All"):
 			result = view_all_data()
-			# st.write(result)
 			clean_df = pd.DataFrame(result,columns=["Task","Status","Date"])
 			st.dataframe(clean_df)
 
 		with st.expander("Task Status"):
 			task_df = clean_df['Status'].value_counts().to_frame()
-			# st.dataframe(task_df)
 			task_df = task_df.reset_index()
 			st.dataframe(task_df)
 
@@ -64,14 +61,13 @@ def main():
 		st.subheader("Edit Items")
 		with st.expander("Current Data"):
 			result = view_all_data()
-			# st.write(result)
 			clean_df = pd.DataFrame(result,columns=["Task","Status","Date"])
 			st.dataframe(clean_df)
 
 		list_of_tasks = [i[0] for i in view_all_task_names()]
 		selected_task = st.selectbox("Task",list_of_tasks)
 		task_result = get_task(selected_task)
-		# st.write(task_result)
+		
 
 		if task_result:
 			task = task_result[0][0]
@@ -93,16 +89,14 @@ def main():
 
 			with st.expander("View Updated Data"):
 				result = view_all_data()
-				# st.write(result)
 				clean_df = pd.DataFrame(result,columns=["Task","Status","Date"])
 				st.dataframe(clean_df)
 
 
-	elif choice == "Delete":
+	else:
 		st.subheader("Delete")
 		with st.expander("View Data"):
-			result = view_all_data()
-			# st.write(result)
+			result = view_all_data()		
 			clean_df = pd.DataFrame(result,columns=["Task","Status","Date"])
 			st.dataframe(clean_df)
 
@@ -113,15 +107,9 @@ def main():
 			st.warning("Deleted: '{}'".format(delete_by_task_name))
 
 		with st.expander("Updated Data"):
-			result = view_all_data()
-			# st.write(result)
+			result = view_all_data()			
 			clean_df = pd.DataFrame(result,columns=["Task","Status","Date"])
 			st.dataframe(clean_df)
-
-	else:
-		st.subheader("About ToDo List App")
-		st.info("Built with Streamlit")
-		
 
 
 if __name__ == '__main__':
